@@ -50,9 +50,10 @@ void Server::Run()
         if (r < 0) {
             std::cout << "read error" << std::endl;
         }
-        std::cout << "================================\n";
-        std::cout << buffer << std::endl;
-        std::cout << "================================\n";
+
+        // std::cout << "================================\n";
+        // std::cout << buffer << std::endl;
+        // std::cout << "================================\n";
 
 
         HttpRequest request(this, buffer);
@@ -62,21 +63,11 @@ void Server::Run()
             m_GetMappers[request.GetPath()](request, response);
         }
 
-        response.body = "<h1>Wow It's Works</h1>"
-        "<h1 style=\"color:red\">Red Color</h1>"
-        "<h1 style=\"color:blue\">Blue Color</h1>"
-        "<h1 style=\"color:black\">Blue Color</h1>";
         int error = write(new_socket, response.GetData().c_str(), response.GetData().size());
         if (error < 0) {
             std::cout << "send error" << std::endl;
         }
-
-        // char response[] = "HTTP/1.0 200 OK\r\n\r\n<h1>My Web</h1>";
-
-        // int error = write(new_socket, response, strlen(response));
-        // if (error < 0) {
-        //     std::cout << "send error" << std::endl;
-        // }
+        
         close(new_socket);
         break;
     }
