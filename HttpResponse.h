@@ -14,7 +14,6 @@ public:
     
     void AddHeader(std::string&&, std::string&&);
     
-    
 private:
     std::string GetStatusString(HttpStatus status);
 

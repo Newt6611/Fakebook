@@ -32,8 +32,6 @@ std::string& HttpResponse::GetData()
     returnData += "\r\n";
     returnData += body;
 
-    std::cout << returnData << std::endl;
-
     return returnData;
 }
 

@@ -1,6 +1,7 @@
 #include "Server.h"
 #include "HttpRequest.h"
 #include "HttpResponse.h"
+#include "Utils.h"
 
 Server::Server(int port)
 {
@@ -65,11 +66,25 @@ void Server::Run()
         HttpRequest request(this, buffer);
         HttpResponse response;
 
-        if (request.GetMethod() == HttpMethod::GET) {
-            m_GetMappers[request.GetPath()](request, response);
+        bool foundPath = false;
+        if (request.GetMethod() == HttpMethod::GET && !foundPath) {
+            if (m_GetMappers.find(request.GetPath()) != m_GetMappers.end()) {
+                m_GetMappers[request.GetPath()](request, response);
+                foundPath = true;
+            }
         } 
-        else if (request.GetMethod() == HttpMethod::POST) {
-            m_PostMappers[request.GetPath()](request, response);
+        else if (request.GetMethod() == HttpMethod::POST && !foundPath) {
+            if (m_PostMappers.find(request.GetPath()) != m_PostMappers.end()) {
+                m_PostMappers[request.GetPath()](request, response);
+                foundPath = true;
+            }
+        }
+        
+        if (!foundPath){
+            // not found
+            std::cout << "not found\n";
+            response.status = HttpStatus::NotFound;
+            ReadHtml("./template/notfound.html", response.body);
         }
 
         int error = write(new_socket, response.GetData().c_str(), response.GetData().size());
