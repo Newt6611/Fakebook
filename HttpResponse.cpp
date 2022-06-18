@@ -11,12 +11,28 @@ HttpResponse::~HttpResponse()
     
 }
 
+void HttpResponse::AddHeader(std::string&& key, std::string&& value)
+{
+    m_Headers[key] = value;
+}
+
 std::string& HttpResponse::GetData()
 {
     returnData = "HTTP/1.1 ";
-    returnData += GetStatusString(status) + " ";
-    returnData += "\r\n\r\n";
+    returnData += GetStatusString(status) + " \r\n";
+
+    if (m_Headers.size() != 0) {
+        for (std::unordered_map<std::string, std::string>::iterator it = m_Headers.begin();
+                it != m_Headers.end(); ++it)
+        {
+            returnData += it->first + ": " + it->second + "\r\n";
+        }
+    }
+
+    returnData += "\r\n";
     returnData += body;
+
+    std::cout << returnData << std::endl;
 
     return returnData;
 }
