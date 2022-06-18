@@ -26,6 +26,10 @@ HttpRequest::HttpRequest(Server* server, const char* r)
 			ParseHeaderLine(line);
 		}
 	}
+	
+	// \r\n\r\n -> 4
+	m_Body = request.substr(pos + 4, request.size());
+	std::cout << m_Body << "|" <<std::endl;
 
 }
 

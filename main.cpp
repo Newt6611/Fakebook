@@ -1,27 +1,12 @@
 #include <iostream>
-#include "HttpResponse.h"
-#include "Server.h"
+#include "Headers.h"
 
-// void* proccess(void* fd) {
-//     int sock_fd = *(int*)fd;
 
-//     std::cout <<sock_fd<< std::endl;
-//     std::cout << "accept" << std::endl;
 
-//     char response[] = "HTTP/1.1 200 OK\r\n\r\n <h1>My Web</h1>";
-//     int error = write(sock_fd, response, strlen(response));
-//     if (error == -1) {
-//         std::cout << "send error" << std::endl;
-//         pthread_exit(NULL);
-//     }
-
-//     std::cout << "send " << std::endl;
-//     pthread_exit(NULL);
-// }
 
 int main() {
     
-    Server server(8080);
+    Server server(8081);
 
 
     server.Get("/test", [](HttpRequest& request, HttpResponse& response) {
@@ -29,6 +14,18 @@ int main() {
         "<h1 style=\"color:red\">Red Color</h1>"
         "<h1 style=\"color:blue\">Blue Color</h1>"
         "<h1 style=\"color:black\">Blue Color</h1>";
+    });
+
+    server.Post("/p", [](HttpRequest& request, HttpResponse& response) {
+        JSON obj = JSON::Load(request.GetBody());
+        std::cout << obj["name"] << std::endl;
+        std::cout << obj["password"] << std::endl;
+
+        if (obj["password"].ToString() != "12345") {
+            response.status = HttpStatus::NotFound;
+        } else {
+            response.body = "success";
+        }
     });
 
     server.Run();

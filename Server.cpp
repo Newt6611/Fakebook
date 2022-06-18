@@ -11,6 +11,12 @@ Server::Server(int port)
         return;
     }
 
+    int yes = 1;
+    if (setsockopt(m_Sock, SOL_SOCKET, SO_REUSEADDR, &yes, sizeof(yes)) == -1) {
+        std::cout << "setsockopt error" << std::endl;
+        return;
+    }
+
     bzero(&m_SockInfo, sizeof(sockaddr_in));
     m_SockInfo.sin_family = AF_INET;
     m_SockInfo.sin_addr.s_addr = INADDR_ANY;
@@ -61,6 +67,9 @@ void Server::Run()
 
         if (request.GetMethod() == HttpMethod::GET) {
             m_GetMappers[request.GetPath()](request, response);
+        } 
+        else if (request.GetMethod() == HttpMethod::POST) {
+            m_PostMappers[request.GetPath()](request, response);
         }
 
         int error = write(new_socket, response.GetData().c_str(), response.GetData().size());
@@ -76,7 +85,7 @@ void Server::Run()
 void Server::Get(std::string&& path, MapFunction function)
 {
     if (m_GetMappers.find(path) != m_GetMappers.end()) {
-        std::cout << "already have [GET]" + path;
+        std::cout << "already have [GET]" + path << std::endl;
         return;
     }
 
@@ -86,7 +95,7 @@ void Server::Get(std::string&& path, MapFunction function)
 void Server::Post(std::string&& path, MapFunction function)
 {
     if (m_PostMappers.find(path) != m_PostMappers.end()) {
-        std::cout << "already have [POST]" + path;
+        std::cout << "already have [POST]" + path << std::endl;
         return;
     }
 

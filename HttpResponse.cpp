@@ -13,8 +13,8 @@ HttpResponse::~HttpResponse()
 
 std::string& HttpResponse::GetData()
 {
-    returnData = "HTTP/1.0 200 ";
-    returnData += GetStatusString(status);
+    returnData = "HTTP/1.1 ";
+    returnData += GetStatusString(status) + " ";
     returnData += "\r\n\r\n";
     returnData += body;
 
@@ -26,11 +26,11 @@ std::string HttpResponse::GetStatusString(HttpStatus status)
     switch (status)
     {
     case HttpStatus::Ok:
-        return "Ok";
+        return "200 Ok";
     case HttpStatus::NotFound:
-        return "NotFound";
+        return "404 NotFound";
     case HttpStatus::MethodNotAllowed:
-        return "Method Not Allowed";
+        return "405 Method Not Allowed";
     }
 
     return "";

@@ -22,16 +22,10 @@ using MapFunction = std::function<void(HttpRequest&, HttpResponse&)>;
 class Server
 {
 private:
-    struct MethodPath {
-        HttpMethod method;
-        std::string path;
-    };
-
 
 public:
     Server(int port);
     ~Server();
-
 
     void Get(std::string&& path, MapFunction);
     void Post(std::string&& path, MapFunction);
