@@ -18,10 +18,16 @@ public:
     ~UserService();
 
     /*
+     * Login
+     * return status 0 -> ok,
+    **/
+    int Login(sqlite3* DB, std::string& account, std::string& password);
+
+    /*
      * Add New Account
      * return status 0 -> ok, -1 -> account exists, -2 -> unknow error
     **/
     int NewAccount(sqlite3* DB, std::string& name, std::string& account, std::string& password);
 
-private:
+    
 };

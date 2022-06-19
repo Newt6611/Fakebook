@@ -10,6 +10,11 @@ UserService::~UserService()
 
 }
 
+int UserService::Login(sqlite3*DB, std::string& account, std::string& password) 
+{
+    return 0;
+}
+
 int UserService::NewAccount(sqlite3* DB, std::string& name, std::string& account, std::string& password)
 {
     int status = -2;
