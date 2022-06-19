@@ -28,7 +28,7 @@ Server::Server(int port)
         return;
     }
 
-    if (listen(m_Sock, 10) < 0) {
+    if (listen(m_Sock, 1024) < 0) {
         std::cout << "listen error" << std::endl;
         return;
     }
@@ -82,7 +82,6 @@ void Server::Run()
         
         if (!foundPath){
             // not found
-            std::cout << "not found\n";
             response.status = HttpStatus::NotFound;
             ReadHtml("./template/notfound.html", response.body);
         }

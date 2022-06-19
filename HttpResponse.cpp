@@ -21,12 +21,10 @@ std::string& HttpResponse::GetData()
     returnData = "HTTP/1.1 ";
     returnData += GetStatusString(status) + " \r\n";
 
-    if (m_Headers.size() != 0) {
-        for (std::unordered_map<std::string, std::string>::iterator it = m_Headers.begin();
-                it != m_Headers.end(); ++it)
-        {
-            returnData += it->first + ": " + it->second + "\r\n";
-        }
+    for (std::unordered_map<std::string, std::string>::iterator it = m_Headers.begin();
+            it != m_Headers.end(); ++it)
+    {
+        returnData += it->first + ": " + it->second + "\r\n";
     }
 
     returnData += "\r\n";

@@ -1,6 +1,7 @@
 
 output: main.o Server.o HttpResponse.o HttpRequest.o
-	g++ main.o Server.o HttpResponse.o HttpRequest.o -o output
+	g++ main.o Server.o HttpResponse.o HttpRequest.o -l sqlite3 -o output
+
 main.o: main.cpp
 	g++ -c main.cpp
 
@@ -12,6 +13,7 @@ HttpResponse.o: HttpResponse.cpp HttpResponse.h
 
 HttpRequest.o: HttpRequest.cpp HttpRequest.h
 	g++ -c HttpRequest.cpp
+
 
 clean:
 	rm -f *.o *.out output

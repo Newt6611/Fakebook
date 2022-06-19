@@ -8,7 +8,6 @@
 #include "Server.h"
 #include "Utils.h"
 
-
 // thirdparties
 #include "vendor/json.hpp"
 using json::JSON;
