@@ -92,7 +92,6 @@ void Server::Run()
         }
         
         close(new_socket);
-        break;
     }
 }
 
@@ -102,7 +101,11 @@ void Server::Get(std::string&& path, MapFunction function)
         std::cout << "already have [GET]" + path << std::endl;
         return;
     }
-
+    
+    // get rid of query
+    int qPos = path.find("?");
+    if (qPos != std::string::npos)
+        path = path.substr(0, qPos);
     m_GetMappers[path] = function;
 }
 
@@ -113,5 +116,9 @@ void Server::Post(std::string&& path, MapFunction function)
         return;
     }
 
+    // get rid off query
+    int qPos = path.find("?");
+    if (qPos != std::string::npos)
+        path = path.substr(0, qPos);
     m_PostMappers[path] = function;
 }

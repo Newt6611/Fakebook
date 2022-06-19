@@ -1,6 +1,6 @@
 
-output: main.o Server.o HttpResponse.o HttpRequest.o
-	g++ main.o Server.o HttpResponse.o HttpRequest.o -l sqlite3 -o output
+output: main.o Server.o HttpResponse.o HttpRequest.o UserService.o
+	g++ main.o Server.o HttpResponse.o HttpRequest.o UserService.o -l sqlite3 -o output
 
 main.o: main.cpp
 	g++ -c main.cpp
@@ -14,7 +14,8 @@ HttpResponse.o: HttpResponse.cpp HttpResponse.h
 HttpRequest.o: HttpRequest.cpp HttpRequest.h
 	g++ -c HttpRequest.cpp
 
-
-clean:
+UserService.o: Services/UserService.cpp Services/UserService.h
+	g++ -c Services/UserService.cpp
+c: #clean
 	rm -f *.o *.out output
 

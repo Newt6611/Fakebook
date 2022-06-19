@@ -4,9 +4,35 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <script>
+        function login() {
+            const account = document.getElementById("account").value;
+            const password = document.getElementById("password").value;
+            var data = {
+                "account": account,
+                "password": password
+            };
+
+            fetch('http://localhost:8081/login', {
+                method: "POST",
+                body: data
+            }).then((response) => {
+                console.log(response.json());  
+            }).catch((err) => {
+                console.log('錯誤:', err);
+            });
+         }
+    </script>
+
+
     <title>Facebook Clone</title>
 </head>
 <body>
     <h1>Welcome To Facebook Clone!</h1>
+    Account: <input type="text" id="account"> <br>
+    Password: <input type="text" id="password"> <br>
+    <button onclick="login()">login</button> <br>
+    
 </body>
 </html>

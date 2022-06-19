@@ -29,6 +29,14 @@ HttpRequest::HttpRequest(Server* server, const char* r)
 	
 	// \r\n\r\n -> 4
 	m_Body = request.substr(pos + 4, request.size());
+
+	ParseQuery();
+
+	// get rid off query
+	int qPos = m_Path.find("?");
+	if (qPos != std::string::npos) {
+		m_Path = m_Path.substr(0, qPos);
+	}
 }
 
 void HttpRequest::ParseRequestLine(std::string& r) 
@@ -74,4 +82,40 @@ HttpMethod HttpRequest::StringToHttpMethod(std::string& str)
 		std::cout << "unsupported http method" << std::endl;
 		return HttpMethod::NONE;
 	}
+}
+
+void HttpRequest::ParseQuery()
+{
+	// abc/abc?q=123&b=456
+	// search query
+	int l = 0;
+	std::string key = "";
+	bool startQuery = false;
+	for (int i = 0; i < m_Path.size(); ++i) {
+		if (m_Path[i] == '?') {
+			startQuery = true;
+			l = i + 1;
+		}
+		
+		if (startQuery && m_Path[i] == '=') {
+			key = m_Path.substr(l, i - l);
+			l = i + 1; // start after '='
+		}
+
+		if (!key.empty() && (m_Path[i] == '&' || i == m_Path.size() - 1)) {	
+			int count = i == m_Path.size() - 1 ? i - l + 1 : i - l;
+			m_Query[key] = m_Path.substr(l, count);
+			l = i + 1;
+			key = "";
+		}
+	}
+}
+
+std::string& HttpRequest::GetQuery(std::string&& q)
+{
+	if (m_Query.find(q) != m_Query.end()) {
+		return m_Query[q];
+	}
+
+	return emptyStr;
 }

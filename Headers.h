@@ -8,6 +8,11 @@
 #include "Server.h"
 #include "Utils.h"
 
+// serivces
+#include "Services/UserService.h"
+
 // thirdparties
 #include "vendor/json.hpp"
 using json::JSON;
+
+#include <sqlite3.h>

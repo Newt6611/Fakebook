@@ -32,6 +32,9 @@ public:
     void Run();
 
 private:
+    void GetRidOfQuery(std::string& q);
+
+private:
     int m_Port;
     int m_Sock;
     sockaddr_in m_SockInfo;
