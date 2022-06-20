@@ -86,6 +86,7 @@ void Server::Run()
             ReadHtml("./template/notfound.html", response.body);
         }
 
+        response.CalcData();
         int error = write(new_socket, response.GetData().c_str(), response.GetData().size());
         if (error < 0) {
             std::cout << "send error" << std::endl;

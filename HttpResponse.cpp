@@ -16,21 +16,52 @@ void HttpResponse::AddHeader(std::string&& key, std::string&& value)
     m_Headers[key] = value;
 }
 
+void HttpResponse::AddHeader(std::string& key, std::string& value)
+{
+    m_Headers[key] = value;
+}
+
+void HttpResponse::AddCookie(std::string& key, std::string& value) 
+{
+    m_Cookies.emplace_back(key + "=" + value);
+}
+
+void HttpResponse::AddCookie(std::string&& key, std::string&& value) 
+{
+    m_Cookies.emplace_back(key + "=" + value);
+}
+
 std::string& HttpResponse::GetData()
 {
-    returnData = "HTTP/1.1 ";
-    returnData += GetStatusString(status) + " \r\n";
+    if (m_ReturnData.empty()) {
+        std::cout << "response data empty... forget to call CalcData() before GetData()?\n";
+    }
 
+    return m_ReturnData;
+}
+
+void HttpResponse::CalcData()
+{
+    m_ReturnData = "HTTP/1.1 ";
+    m_ReturnData += GetStatusString(status) + " \r\n";
+
+    // headers
     for (std::unordered_map<std::string, std::string>::iterator it = m_Headers.begin();
             it != m_Headers.end(); ++it)
     {
-        returnData += it->first + ": " + it->second + "\r\n";
+        m_ReturnData += it->first + ": " + it->second + "\r\n";
     }
 
-    returnData += "\r\n";
-    returnData += body;
+    // cookies
+    if (m_Cookies.size() > 0) {
+        std::string cookie = "";
+        for (int i = 0; i < m_Cookies.size(); ++i) {
+            m_ReturnData += "Set-Cookie: " + m_Cookies[i] + ";\r\n"; 
+        }
+    }
 
-    return returnData;
+    m_ReturnData += "\r\n";
+    m_ReturnData += body;
 }
 
 std::string HttpResponse::GetStatusString(HttpStatus status)
