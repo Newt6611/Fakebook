@@ -18,12 +18,15 @@ public:
     inline std::string& GetHttpVersion() { return m_HttpVersion; }
     inline std::string& GetBody() { return m_Body; }
     inline std::unordered_map<std::string, std::string>& GetHeaders() { return m_Headers; }
+    std::unordered_map<std::string, std::string>& GetCookies() { return m_Cookies; }
+
     std::string& GetQuery(std::string&& q);
 
 private:
     void ParseRequestLine(std::string&);
     void ParseHeaderLine(std::string&);
     void ParseQuery();
+    void ParseCookies();
 
     HttpMethod StringToHttpMethod(std::string&);
 
@@ -35,5 +38,6 @@ private:
     std::string m_Body;
     std::unordered_map<std::string, std::string> m_Headers;
     std::unordered_map<std::string, std::string> m_Query;
+    std::unordered_map<std::string, std::string> m_Cookies;
     std::string emptyStr = "";
 };

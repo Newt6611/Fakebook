@@ -37,6 +37,8 @@ HttpRequest::HttpRequest(Server* server, const char* r)
 	if (qPos != std::string::npos) {
 		m_Path = m_Path.substr(0, qPos);
 	}
+
+	ParseCookies();
 }
 
 void HttpRequest::ParseRequestLine(std::string& r) 
@@ -70,20 +72,6 @@ void HttpRequest::ParseHeaderLine(std::string& line)
 	m_Headers[std::move(key)] = value;
 }
 
-HttpMethod HttpRequest::StringToHttpMethod(std::string& str) 
-{
-	if (str == "GET") {
-		return HttpMethod::GET;
-	}
-	else if (str == "POST") {
-		return HttpMethod::POST;
-	}
-	else {
-		std::cout << "unsupported http method" << std::endl;
-		return HttpMethod::NONE;
-	}
-}
-
 void HttpRequest::ParseQuery()
 {
 	// abc/abc?q=123&b=456
@@ -111,6 +99,30 @@ void HttpRequest::ParseQuery()
 	}
 }
 
+void HttpRequest::ParseCookies()
+{
+	if (m_Headers.find("Cookie") == m_Headers.end())
+		return;
+
+	// Cookie: id=a3fWa; Expires=Thu, 21 Oct 2021 07:28:00 GMT; Secure;
+	std::string cookies = m_Headers["Cookie"];
+	int l = 0;
+	std::string key = "";
+	for (int i = 0; i < cookies.size(); ++i) {
+		if (key.empty() && cookies[i] == '=') {
+			key = cookies.substr(l, i - l);
+			l = i + 1;
+		}
+
+		if (!key.empty() && (cookies[i] == ';' || i == cookies.size() - 1)) {
+			int count = i == cookies.size() - 1 ? i - l + 1 : i - l;
+			m_Cookies[key] = cookies.substr(l, count);
+			l = i + 2; // `; Expires...` cause there's a space
+			key = ""; 
+		}
+	}
+}
+
 std::string& HttpRequest::GetQuery(std::string&& q)
 {
 	if (m_Query.find(q) != m_Query.end()) {
@@ -118,4 +130,18 @@ std::string& HttpRequest::GetQuery(std::string&& q)
 	}
 
 	return emptyStr;
+}
+
+HttpMethod HttpRequest::StringToHttpMethod(std::string& str) 
+{
+	if (str == "GET") {
+		return HttpMethod::GET;
+	}
+	else if (str == "POST") {
+		return HttpMethod::POST;
+	}
+	else {
+		std::cout << "unsupported http method" << std::endl;
+		return HttpMethod::NONE;
+	}
 }
