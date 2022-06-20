@@ -132,6 +132,20 @@ std::string& HttpRequest::GetQuery(std::string&& q)
 	return emptyStr;
 }
 
+std::string& HttpRequest::GetCookie(std::string& c) 
+{
+	if (m_Cookies.find(c) != m_Cookies.end())
+		return m_Cookies[c];
+	return emptyStr;
+}
+
+std::string& HttpRequest::GetCookie(std::string&& c) 
+{
+	if (m_Cookies.find(c) != m_Cookies.end())
+		return m_Cookies[c];
+	return emptyStr;
+}
+
 HttpMethod HttpRequest::StringToHttpMethod(std::string& str) 
 {
 	if (str == "GET") {

@@ -29,6 +29,8 @@ int main() {
 
     server.Get("/", [&](HttpRequest& request, HttpResponse& response) {
         ReadHtml("./template/login.html", response.body);
+
+        std::string c = request.GetCookie("c");
     });
 
     server.Post("/login", [&](HttpRequest& request, HttpResponse& response) {
@@ -70,7 +72,7 @@ int main() {
             );
         }
 
-        response.body = returnObj.ToString();
+        response.body = returnObj.dump();
     });
 
 

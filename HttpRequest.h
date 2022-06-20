@@ -18,6 +18,9 @@ public:
     inline std::string& GetHttpVersion() { return m_HttpVersion; }
     inline std::string& GetBody() { return m_Body; }
     inline std::unordered_map<std::string, std::string>& GetHeaders() { return m_Headers; }
+
+    std::string& GetCookie(std::string& c);
+    std::string& GetCookie(std::string&& c);
     std::unordered_map<std::string, std::string>& GetCookies() { return m_Cookies; }
 
     std::string& GetQuery(std::string&& q);
